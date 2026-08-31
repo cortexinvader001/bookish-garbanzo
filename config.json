@@ -1,0 +1,130 @@
+{
+  "profile": {
+    "name": "Kolawole Suleiman",
+    "tagline": "chronophobic yet optimistic.",
+    "role": "Creative Technologist & Full-Stack Systems Engineer",
+    "email": "kolawolesuleiman716@gmail.com",
+    "location": "Global / Remote",
+    "bio": "Passionate about high-performance computing, interactive graphics, cloud automation, and building immersive web experiences with modern architecture."
+  },
+  "about": {
+    "id": "aboutme",
+    "title": "About Me",
+    "subtitle": "Engineering intuitive, high-performance systems and interactive visual architectures.",
+    "bio": "I am a full-stack engineer and creative technologist. Blending mathematical precision with kinetic web aesthetics, I focus on building scalable web tools, high-throughput microservices, and reactive WebGL shaders that bridge human interaction and computational speed.",
+    "notes": [
+      {
+        "id": "philosophy",
+        "title": "Design & Systems Philosophy",
+        "description": "Chronophobic yet optimistic — designing software with high execution speed, zero bloat, intuitive typography, and durable systems thinking."
+      },
+      {
+        "id": "architecture",
+        "title": "Core Architecture & Domains",
+        "description": "Specialized in Reactive UI (React), WebGL/GLSL Shaders, Native Systems (C++/WebAssembly), Python Cloud Pipelines, and Workspace Automation."
+      },
+      {
+        "id": "exploration",
+        "title": "Current Research & Experiments",
+        "description": "N-body real-time gravitational simulations in browser viewports, autonomous worker queues on Render, and lightweight GPU canvas compositing."
+      }
+    ]
+  },
+  "contacts": [
+    {
+      "platform": "GitHub",
+      "handle": "@cortexinader001",
+      "url": "https://github.com/cortexinader001",
+      "icon": "github",
+      "color": "#a371f7",
+      "accent": "#c084fc",
+      "description": "Source code, experimental engines & public repositories"
+    },
+    {
+      "platform": "LinkedIn",
+      "handle": "@cortexinader",
+      "url": "https://linkedin.com/in/cortexinader",
+      "icon": "linkedin",
+      "color": "#0a66c2",
+      "accent": "#38bdf8",
+      "description": "Professional network, experience & engineering collaborations"
+    },
+    {
+      "platform": "Instagram",
+      "handle": "@py_sman",
+      "url": "https://instagram.com/py_sman",
+      "icon": "instagram",
+      "color": "#e1306c",
+      "accent": "#f43f5e",
+      "description": "Visual experiments, creative snippets & lifestyle logs"
+    },
+    {
+      "platform": "Threads",
+      "handle": "@py_sman",
+      "url": "https://threads.net/@py_sman",
+      "icon": "threads",
+      "color": "#ffffff",
+      "accent": "#e2e8f0",
+      "description": "Quick thoughts on tech, real-time developer musings & notes"
+    },
+    {
+      "platform": "Email",
+      "handle": "kolawolesuleiman716@gmail.com",
+      "url": "mailto:kolawolesuleiman716@gmail.com",
+      "icon": "mail",
+      "color": "#4285f4",
+      "accent": "#60a5fa",
+      "description": "Direct communication for projects, proposals, or questions"
+    }
+  ],
+  "projects": [
+    {
+      "slug": "cortex-invader",
+      "title": "Cortex Invader",
+      "tagline": "A neon-drenched arcade space shooter with reactive particle shaders.",
+      "description": "Cortex Invader is a high-octane space shooter built directly for the browser, combining procedural wave mechanics with dynamic GLSL lighting algorithms and an original 80s synth aesthetic.",
+      "image": "https://i.ibb.co/HT8kgrSp/cd640f8c-6c18-49fd-b1f2-4ff8fe754d9f.png",
+      "tags": ["React", "WebGL", "Canvas 2D", "JavaScript", "GLSL"],
+      "links": {
+        "live": "https://github.com/cortexinader001",
+        "code": "https://github.com/cortexinader001"
+      }
+    },
+    {
+      "slug": "neural-sync-automator",
+      "title": "Neural Sync Automator",
+      "tagline": "Autonomous data pipeline & notification engine connecting cloud endpoints.",
+      "description": "An enterprise automation engine bridging Google Workspace databases and cloud microservices. Uses Python worker queues deployed on Render and scheduled Google Apps Scripts to process distributed telemetry.",
+      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+      "tags": ["Python", "Google Apps Script", "Render", "REST API"],
+      "links": {
+        "live": "https://render.com",
+        "code": "https://github.com/cortexinader001"
+      }
+    },
+    {
+      "slug": "vortex-engine-wasm",
+      "title": "Vortex Physics Engine",
+      "tagline": "Real-time multi-threaded N-body particle solver compiled for web.",
+      "description": "A high-performance physics simulation kernel written in modern C++ and compiled to WebAssembly. Simulates over 50,000 interacting gravitational bodies at 60 FPS in browser viewports.",
+      "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      "tags": ["C++", "WebAssembly", "React", "GLSL"],
+      "links": {
+        "live": "https://isocpp.org",
+        "code": "https://github.com/cortexinader001"
+      }
+    },
+    {
+      "slug": "hyperion-cloud-metrics",
+      "title": "Hyperion Cloud Dashboard",
+      "tagline": "Real-time telemetry and edge deployment visualization monitor.",
+      "description": "A sleek, dark-mode observability dashboard monitoring microservice uptime, serverless execution latency, and edge CDN cache hit ratios across multi-region deployments.",
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+      "tags": ["React", "Vercel", "Replit", "WebSockets"],
+      "links": {
+        "live": "https://vercel.com",
+        "code": "https://github.com/cortexinader001"
+      }
+    }
+  ]
+}

@@ -31,9 +31,9 @@ export default function ProjectDetail() {
       <div className="project-detail-body">
         <p>{project.description}</p>
 
-        {project.tech?.length > 0 && (
+        {(project.tags || project.tech)?.length > 0 && (
           <ul className="tech-list">
-            {project.tech.map((t) => (
+            {(project.tags || project.tech).map((t) => (
               <li key={t}>{t}</li>
             ))}
           </ul>

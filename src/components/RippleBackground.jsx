@@ -117,14 +117,22 @@ export default function RippleBackground() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReducedMotion) return
 
-    const renderer = new Renderer({
-      canvas,
-      alpha: true,
-      antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
-    })
+    let renderer
+    let gl
+    try {
+      renderer = new Renderer({
+        canvas,
+        alpha: true,
+        antialias: false,
+        dpr: Math.min(window.devicePixelRatio || 1, 2),
+      })
+      gl = renderer.gl
+    } catch (err) {
+      console.warn('WebGL initialization skipped:', err)
+      return
+    }
 
-    const gl = renderer.gl
+    if (!gl) return
     gl.clearColor(0, 0, 0, 0)
 
     const offsets = new Float32Array(MAX_WAVES * 2)
@@ -146,99 +154,118 @@ export default function RippleBackground() {
     let previousX = 0
     let previousY = 0
     let lastWaveTime = 0
+    let isCleanedUp = false
 
-    const geometry = new Geometry(gl, {
-      position: {
-        size: 2,
-        data: new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-      },
-      uv: {
-        size: 2,
-        data: new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]),
-      },
-      iOffset: { instanced: 1, size: 2, data: offsets },
-      iScale: { instanced: 1, size: 2, data: scales },
-      iOpacity: { instanced: 1, size: 1, data: opacities },
-    })
+    let geometry
+    let waveProgram
+    let waveMesh
+    let displacementTarget
+    let baseTexture
+    let compositeMesh
+    const compositeUniforms = {}
 
-    const waveProgram = new Program(gl, {
-      vertex: waveVertex,
-      fragment: waveFragment,
-      uniforms: { uRings: { value: 4 } },
-      transparent: true,
-      depthTest: false,
-      depthWrite: false,
-      cullFace: false,
-    })
+    try {
+      geometry = new Geometry(gl, {
+        position: {
+          size: 2,
+          data: new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+        },
+        uv: {
+          size: 2,
+          data: new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]),
+        },
+        iOffset: { instanced: 1, size: 2, data: offsets },
+        iScale: { instanced: 1, size: 2, data: scales },
+        iOpacity: { instanced: 1, size: 1, data: opacities },
+      })
 
-    waveProgram.setBlendFunc(gl.ONE, gl.ONE)
-
-    const waveMesh = new Mesh(gl, {
-      geometry,
-      program: waveProgram,
-      frustumCulled: false,
-    })
-
-    const displacementTarget = new RenderTarget(gl, {
-      width: 2,
-      height: 2,
-      depth: false,
-      minFilter: gl.LINEAR,
-      magFilter: gl.LINEAR,
-      wrapS: gl.CLAMP_TO_EDGE,
-      wrapT: gl.CLAMP_TO_EDGE,
-    })
-
-    // Transparent 1x1 texture as the compositing source, so the WebGL
-    // layer produces subtle light ripples without replacing the CSS background.
-    const baseTexture = new Texture(gl, {
-      generateMipmaps: false,
-      minFilter: gl.LINEAR,
-      magFilter: gl.LINEAR,
-      wrapS: gl.CLAMP_TO_EDGE,
-      wrapT: gl.CLAMP_TO_EDGE,
-    })
-
-    const pixel = new Uint8Array([5, 5, 5, 255])
-    baseTexture.image = pixel
-    baseTexture.width = 1
-    baseTexture.height = 1
-
-    const compositeUniforms = {
-      uTexture: { value: baseTexture },
-      uDisplacement: { value: displacementTarget.texture },
-      uResolution: { value: [1, 1] },
-      uTextureSize: { value: [1, 1] },
-      uTexel: { value: [1, 1] },
-      uStrength: { value: 0.045 },
-      uSwirl: { value: 0.65 },
-      uGlint: { value: 0.9 },
-    }
-
-    const compositeMesh = new Mesh(gl, {
-      geometry: new Triangle(gl),
-      program: new Program(gl, {
-        vertex: screenVertex,
-        fragment: compositeFragment,
-        uniforms: compositeUniforms,
+      waveProgram = new Program(gl, {
+        vertex: waveVertex,
+        fragment: waveFragment,
+        uniforms: { uRings: { value: 4 } },
         transparent: true,
         depthTest: false,
         depthWrite: false,
-      }),
-    })
+        cullFace: false,
+      })
+
+      waveProgram.setBlendFunc(gl.ONE, gl.ONE)
+
+      waveMesh = new Mesh(gl, {
+        geometry,
+        program: waveProgram,
+        frustumCulled: false,
+      })
+
+      displacementTarget = new RenderTarget(gl, {
+        width: 2,
+        height: 2,
+        depth: false,
+        minFilter: gl.LINEAR,
+        magFilter: gl.LINEAR,
+        wrapS: gl.CLAMP_TO_EDGE,
+        wrapT: gl.CLAMP_TO_EDGE,
+      })
+
+      // Transparent 1x1 texture as the compositing source, so the WebGL
+      // layer produces subtle light ripples without replacing the CSS background.
+      baseTexture = new Texture(gl, {
+        generateMipmaps: false,
+        minFilter: gl.LINEAR,
+        magFilter: gl.LINEAR,
+        wrapS: gl.CLAMP_TO_EDGE,
+        wrapT: gl.CLAMP_TO_EDGE,
+      })
+
+      const pixel = new Uint8Array([5, 5, 5, 255])
+      baseTexture.image = pixel
+      baseTexture.width = 1
+      baseTexture.height = 1
+
+      compositeUniforms.uTexture = { value: baseTexture }
+      compositeUniforms.uDisplacement = { value: displacementTarget.texture }
+      compositeUniforms.uResolution = { value: [1, 1] }
+      compositeUniforms.uTextureSize = { value: [1, 1] }
+      compositeUniforms.uTexel = { value: [1, 1] }
+      compositeUniforms.uStrength = { value: 0.045 }
+      compositeUniforms.uSwirl = { value: 0.65 }
+      compositeUniforms.uGlint = { value: 0.9 }
+
+      compositeMesh = new Mesh(gl, {
+        geometry: new Triangle(gl),
+        program: new Program(gl, {
+          vertex: screenVertex,
+          fragment: compositeFragment,
+          uniforms: compositeUniforms,
+          transparent: true,
+          depthTest: false,
+          depthWrite: false,
+        }),
+      })
+    } catch (err) {
+      console.warn('WebGL shader/mesh initialization error:', err)
+      return
+    }
 
     function resize() {
+      if (isCleanedUp || !renderer) return
       width = Math.max(1, window.innerWidth)
       height = Math.max(1, window.innerHeight)
 
       renderer.setSize(width, height)
-      compositeUniforms.uResolution.value = [width, height]
+      if (compositeUniforms.uResolution) {
+        compositeUniforms.uResolution.value = [width, height]
+      }
 
       const fieldW = Math.max(2, Math.round(width * QUALITY_SCALE))
       const fieldH = Math.max(2, Math.round(height * QUALITY_SCALE))
 
-      displacementTarget.setSize(fieldW, fieldH)
-      compositeUniforms.uTexel.value = [1 / fieldW, 1 / fieldH]
+      if (displacementTarget) {
+        displacementTarget.setSize(fieldW, fieldH)
+      }
+      if (compositeUniforms.uTexel) {
+        compositeUniforms.uTexel.value = [1 / fieldW, 1 / fieldH]
+      }
     }
 
     function addWave(clientX, clientY, power = 1) {
@@ -282,7 +309,11 @@ export default function RippleBackground() {
     let previousTime = 0
 
     function loop(now) {
+      if (isCleanedUp) return
+
       raf = requestAnimationFrame(loop)
+
+      if (gl.isContextLost && gl.isContextLost()) return
 
       const delta = previousTime ? Math.min(0.05, (now - previousTime) / 1000) : 0
       previousTime = now
@@ -318,24 +349,28 @@ export default function RippleBackground() {
         opacities[i] = wave.opacity
       }
 
-      geometry.attributes.iOffset.needsUpdate = true
-      geometry.attributes.iScale.needsUpdate = true
-      geometry.attributes.iOpacity.needsUpdate = true
+      if (geometry?.attributes?.iOffset) {
+        geometry.attributes.iOffset.needsUpdate = true
+        geometry.attributes.iScale.needsUpdate = true
+        geometry.attributes.iOpacity.needsUpdate = true
+      }
 
-      renderer.render({ scene: waveMesh, target: displacementTarget, clear: true })
-      renderer.render({ scene: compositeMesh, clear: true })
+      try {
+        renderer.render({ scene: waveMesh, target: displacementTarget, clear: true })
+        renderer.render({ scene: compositeMesh, clear: true })
+      } catch {
+        // Context might have been invalidated
+      }
     }
 
     raf = requestAnimationFrame(loop)
 
     return () => {
+      isCleanedUp = true
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
       window.removeEventListener('pointermove', handlePointerMove)
       window.removeEventListener('pointerdown', handlePointerDown)
-
-      const loseContext = gl.getExtension('WEBGL_lose_context')
-      if (loseContext) loseContext.loseContext()
     }
   }, [])
 
