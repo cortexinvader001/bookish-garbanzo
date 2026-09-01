@@ -14,17 +14,14 @@
     "bio": "I am a full-stack engineer and creative technologist. Blending mathematical precision with kinetic web aesthetics, I focus on building scalable web tools, high-throughput microservices, and reactive WebGL shaders that bridge human interaction and computational speed.",
     "notes": [
       {
-        "id": "philosophy",
         "title": "Design & Systems Philosophy",
         "description": "Chronophobic yet optimistic — designing software with high execution speed, zero bloat, intuitive typography, and durable systems thinking."
       },
       {
-        "id": "architecture",
         "title": "Core Architecture & Domains",
         "description": "Specialized in Reactive UI (React), WebGL/GLSL Shaders, Native Systems (C++/WebAssembly), Python Cloud Pipelines, and Workspace Automation."
       },
       {
-        "id": "exploration",
         "title": "Current Research & Experiments",
         "description": "N-body real-time gravitational simulations in browser viewports, autonomous worker queues on Render, and lightweight GPU canvas compositing."
       }

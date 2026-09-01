@@ -115,7 +115,7 @@ export default function Home() {
           <h3 className="about-notes-title">Architectural Notes &amp; Core Tenets</h3>
           <div className="about-notes-grid">
             {about.notes && about.notes.map((note, idx) => (
-              <div key={note.id || idx} className="about-note-card" id={`note-card-${note.id || idx}`}>
+              <div key={note.title || idx} className="about-note-card" id={`note-card-${idx + 1}`}>
                 <div className="note-card-header">
                   <span className="note-number">0{idx + 1}</span>
                   <h4 className="note-title">{note.title}</h4>

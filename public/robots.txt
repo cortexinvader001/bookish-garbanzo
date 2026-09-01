@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap URL (Update with your custom production domain upon deployment)
+Sitemap: https://ais-pre-tgo5wtposn6ozy2nz2oivd-413630995627.europe-west2.run.app/sitemap.xml

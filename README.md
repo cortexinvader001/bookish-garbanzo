@@ -1,73 +1,182 @@
-# Kolawole Suleiman — Portfolio
+# Portfolio Developer Guide
 
-React + Vite version of the portfolio site, with routing via React Router.
+A modern, high-performance portfolio template built with **React**, **Vite**, **Tailwind CSS**, and interactive **WebGL** shaders.
 
-## Getting started
+---
 
-```bash
-npm install
-npm run dev
-```
+## 🚀 Deployment & URLs
 
-Open the printed local URL (usually http://localhost:5173).
+When deploying your portfolio (e.g. to Cloud Run, Vercel, Render, Netlify, or GitHub Pages), update the corresponding URL references in your project.
 
-To build for production:
+### Deployment Reference Points:
+- **Live Preview / Production URL**: Update in `index.html` (Open Graph & Schema.org) and `public/robots.txt` + `public/sitemap.xml`.
+- **Project Live & Code URLs**: Configured per project inside `src/config.json`.
 
-```bash
-npm run build
-npm run preview   # preview the production build locally
-```
+---
 
-## Project structure
+## ⚙️ Configuration Guide (`src/config.json`)
 
-```
-src/
-  main.jsx              Router setup — add new pages/routes here
-  App.jsx                Shared layout: background, ripple canvas, header, <Outlet/>
-  index.css               All global styles
-  components/
-    Header.jsx             Logo + nav (active link highlighting via NavLink)
-    RippleBackground.jsx    WebGL cursor-ripple effect (ogl), respects prefers-reduced-motion
-    ScrollCue.jsx           Bottom scroll indicator, shown on Home
-  pages/
-    Home.jsx                Hero section
-    Projects.jsx             Grid of project cards, pulled from src/data/projects.js
-    ProjectDetail.jsx        /projects/:slug — detail page for one project
-    Contact.jsx               Contact links
-  data/
-    projects.js               Add/edit projects here — each entry auto-generates
-                               a card on /projects and a page at /projects/:slug
-```
+All site content, projects, contact channels, and bio notes are driven entirely by `src/config.json`. You do not need to modify core React components to update content.
 
-## Adding a new project
-
-Open `src/data/projects.js` and add an object to the array:
-
-```js
+### 1. Profile Information (`profile`)
+Set your name, tagline, professional role, and contact email:
+```json
 {
-  slug: 'my-new-project',
-  title: 'My New Project',
-  tagline: 'One-line description for the card.',
-  image: 'https://...',
-  tech: ['React', 'Node'],
-  description: 'Longer description shown on the detail page.',
-  links: { live: 'https://...', code: 'https://github.com/...' },
+  "profile": {
+    "name": "Your Name",
+    "tagline": "Your personal tagline or slogan.",
+    "role": "Your Professional Title",
+    "email": "your.email@example.com",
+    "location": "Your Location / Remote",
+    "bio": "A brief overview of your background and domain expertise."
+  }
 }
 ```
 
-That's it — it'll appear on the Projects page and get its own detail route automatically.
+---
 
-## Adding a new page
+### 2. About Me & Notes (`about`)
+Configure the bio section and architectural/philosophical tenets displayed on `#aboutme`:
+```json
+{
+  "about": {
+    "id": "aboutme",
+    "title": "About Me",
+    "subtitle": "Brief subtitle highlighting your engineering focus.",
+    "bio": "Detailed summary of your technical background and philosophy.",
+    "notes": [
+      {
+        "title": "Topic or Tenet Title",
+        "description": "Explanation of your philosophy, domains, or experiments."
+      }
+    ]
+  }
+}
+```
+*Note: Note items do not require an `id` attribute; they only require `title` and `description`.*
 
-1. Create `src/pages/YourPage.jsx`.
-2. Register it in `src/main.jsx` inside the `<Route path="/" element={<App />}>` block.
-3. Add a nav link in `src/components/Header.jsx` if it should appear in the header.
+---
 
-## Notes
+### 3. Contact & Social Channels (`contacts`)
+Add or modify social media handles, portfolio links, and messaging options:
+```json
+{
+  "contacts": [
+    {
+      "platform": "GitHub",
+      "handle": "@username",
+      "url": "https://github.com/username",
+      "icon": "github",
+      "color": "#a371f7",
+      "accent": "#c084fc",
+      "description": "Short description of what visitors will find here."
+    },
+    {
+      "platform": "LinkedIn",
+      "handle": "@username",
+      "url": "https://linkedin.com/in/username",
+      "icon": "linkedin",
+      "color": "#0a66c2",
+      "accent": "#38bdf8",
+      "description": "Professional network and experience."
+    },
+    {
+      "platform": "Instagram",
+      "handle": "@username",
+      "url": "https://instagram.com/username",
+      "icon": "instagram",
+      "color": "#e1306c",
+      "accent": "#f43f5e",
+      "description": "Visual highlights and design snippets."
+    },
+    {
+      "platform": "Threads",
+      "handle": "@username",
+      "url": "https://threads.net/@username",
+      "icon": "threads",
+      "color": "#ffffff",
+      "accent": "#e2e8f0",
+      "description": "Developer thoughts and updates."
+    },
+    {
+      "platform": "Email",
+      "handle": "your.email@example.com",
+      "url": "mailto:your.email@example.com",
+      "icon": "mail",
+      "color": "#4285f4",
+      "accent": "#60a5fa",
+      "description": "Direct inquiries and proposals."
+    }
+  ]
+}
+```
+*Supported `icon` keys: `github`, `linkedin`, `instagram`, `threads`, `mail`.*
 
-- The ripple background effect is skipped automatically for users with
-  `prefers-reduced-motion` enabled.
-- Deploy the `dist/` folder (after `npm run build`) to any static host —
-  Vercel, Netlify, GitHub Pages, Cloudflare Pages, etc. If deploying to a
-  subpath or GitHub Pages project site, you may need to set `base` in
-  `vite.config.js`.
+---
+
+### 4. Projects Collection (`projects`)
+Add projects to populate both the moving-border cards on `/projects` and the dynamic detail pages at `/projects/:slug`:
+```json
+{
+  "projects": [
+    {
+      "slug": "unique-url-slug",
+      "title": "Project Title",
+      "tagline": "One-line summary for project cards.",
+      "description": "Comprehensive explanation of architecture, challenges, and solutions.",
+      "image": "https://example.com/screenshot.png",
+      "tags": ["React", "WebGL", "Python", "Cloud"],
+      "links": {
+        "live": "https://your-deployed-app.com",
+        "code": "https://github.com/username/project-repo"
+      }
+    }
+  ]
+}
+```
+
+---
+
+## 🔍 SEO, Robots.txt & Sitemap Configuration
+
+### Robots (`public/robots.txt`)
+Controls search engine indexing and declares sitemap location:
+```txt
+User-agent: *
+Allow: /
+
+Sitemap: https://your-domain.com/sitemap.xml
+```
+
+### Sitemap (`public/sitemap.xml`)
+List all public routes with priority and change frequencies. When adding new projects or routes, append a `<url>` block to `public/sitemap.xml`:
+```xml
+<url>
+  <loc>https://your-domain.com/projects/your-new-project-slug</loc>
+  <lastmod>YYYY-MM-DD</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+```
+
+### Metadata & Canonical Tags (`index.html`)
+Update the following tags when linking a custom domain:
+- `<title>` and `<meta name="title">`
+- `<meta name="description">`
+- `<meta property="og:url" content="https://your-domain.com">`
+- `<script type="application/ld+json">` (replace `"url"` with your production domain)
+
+---
+
+## 💻 Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Start local development server (Port 3000)
+npm run dev
+
+# Build production bundle (Output in dist/)
+npm run build
+```
